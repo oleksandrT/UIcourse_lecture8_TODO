@@ -1,0 +1,49 @@
+/*
+ * General styles
+*/
+html, body {
+    margin: 0;
+    padding: 0;
+    outline: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    padding: 15px;
+}
+
+/*
+ * Components styles
+*/
+
+.planner .planner_group {
+    background-color: #f5f6f6;
+    padding: 10px;
+    margin-bottom: 30px;
+}
+
+.planner .planner_list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.planner .planner_item {
+    background-color: #d6dbdb;
+    padding: 5px;
+    margin-bottom: 5px;
+}
+
+.planner .planner_input {
+    padding: 3px 6px;
+}
+
+.planner .planner_item-button {
+    padding: 3px 6px;
+    border: 1px solid transparent;
+}
+
+.planner .planner_item-button--add { background-color: cadetblue; }
+.planner .planner_item-button--start { background-color: mediumseagreen; }
+.planner .planner_item-button--stop { background-color: tomato; }
+.planner .planner_item-button--reset { background-color: white; }
