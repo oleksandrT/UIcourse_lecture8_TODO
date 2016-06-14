@@ -30,20 +30,59 @@ body {
 
 .planner .planner_item {
     background-color: #d6dbdb;
-    padding: 5px;
+    padding: 10px 5px;
     margin-bottom: 5px;
 }
 
 .planner .planner_input {
-    padding: 3px 6px;
+    padding: 4px 6px;
+    font-size: 1em;
+    border: 1px solid #c0c0c0;
+}
+
+.planner .planner_divider {
+    margin: 20px 0;
+}
+
+.planner .planner_item-title, .planner .planner_item-time {
+    margin-bottom: 10px;
+}
+
+.planner .planner_item-title {
+    font-weight: 700;
 }
 
 .planner .planner_item-button {
-    padding: 3px 6px;
+    padding: 8px 6px;
     border: 1px solid transparent;
+    text-transform: uppercase;
+    margin-left: -4px;
 }
 
-.planner .planner_item-button--add { background-color: cadetblue; }
+.planner .planner_item-button--add { background-color: cadetblue; vertical-align: top; }
 .planner .planner_item-button--start { background-color: mediumseagreen; }
 .planner .planner_item-button--stop { background-color: tomato; }
 .planner .planner_item-button--reset { background-color: white; }
+.planner .planner_item-button--new-group { margin-left: 0; margin-bottom: 10px; }
+
+
+@media (min-width: 768px) {
+    .planner .planner_item {
+        display: flex;
+    }
+
+    .planner .planner_item-title, .planner .planner_item-time, .planner .planner_item-controls {
+        flex: 1;
+        margin-bottom: 0;
+    }
+
+    .planner .planner_item-title, .planner .planner_item-time {
+        line-height: 1.7em;
+    }
+}
+
+@media (min-width: 1024px) {
+    .planner .planner_item-title {
+        flex: 2;
+    }
+}
