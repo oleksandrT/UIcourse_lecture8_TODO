@@ -68,7 +68,7 @@ body {
 .planner .planner_item-button--start { background-color: mediumseagreen; }
 .planner .planner_item-button--stop { background-color: tomato; }
 .planner .planner_item-button--reset { background-color: white; }
-.planner .planner_item-button--new-group { margin-left: 0; margin-bottom: 10px; }
+.planner .planner_item-button--new-group { margin-left: -4px; margin-bottom: 10px; }
 
 .text-help {
     display: none;

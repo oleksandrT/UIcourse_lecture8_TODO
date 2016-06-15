@@ -5,11 +5,44 @@ var sections, addNewGroupBtn, addNewItemBtn, startBtn, stopBtn, resetBtn, data;
 // Constants
 var helpTextNotEmpty = "New item can be created only if all fields are set",
     helpTextNotNumber = "Time set as not a number",
-    helpTextExceedValue = "Break new task on smaller ones, so duration of each doesn't exceed 8 hours";
+    helpTextExceedValue = "Break new task on smaller ones, so duration of each doesn't exceed 8 hours",
+    helpTextNoTitle = "You should type a title for new group";
 
 // Templates
-var controlsDivInner =   '<span>Timer:</span> <button class="planner_item-button planner_item-button--start js-start">Start</button> <button class="planner_item-button planner_item-button--stop js-stop">Stop</button> <button class="planner_item-button planner_item-button--reset js-reset">Reset</button>';
-var addNewDivInner = '<input type="text" placeholder="New Item\'s title" class="planner_input"> <input type="text" placeholder="New Item\'s duration" class="planner_input"> <button class="planner_item-button planner_item-button--add js-new-item">Add</button>';
+var sectionInner = '';
+var controlsDivInner = '<span>Timer:</span> <button class="planner_item-button planner_item-button--start js-start">Start</button> <button class="planner_item-button planner_item-button--stop js-stop">Stop</button> <button class="planner_item-button planner_item-button--reset js-reset">Reset</button>';
+var addNewDivInner = '<input type="text" placeholder="New Item\'s title" class="planner_input"> <input type="text" placeholder="New Item\'s duration" class="planner_input"> <button class="planner_item-button planner_item-button--add js-new-item">Add new item</button>';
+
+// Initial Data
+var initData = {
+    "groups": [
+        {
+            title: "Default",
+            content: [
+                {
+                    title: "Test task",
+                    timeEstimation: "8",
+                    timeLeft: "8"
+                },
+                {
+                    title: "Test task2",
+                    timeEstimation: "8",
+                    timeLeft: "8"
+                }
+            ]
+        }
+        // {
+        //     title: "Private",
+        //     content: [
+        //         {
+        //             title: "Test task 3",
+        //             timeEstimation: "5",
+        //             timeLeft: "4"
+        //         }
+        //     ]
+        // }
+    ]
+};
 
 
 initStorage();
@@ -22,35 +55,7 @@ function initStorage() {
         var localVal,
             localItem = localStorage.getItem("my-todo");
         if (localItem == null) {
-            localVal = {
-                "groups": [
-                    {
-                        title: "Default",
-                        content: [
-                            {
-                                title: "Test task",
-                                timeEstimation: "8",
-                                timeLeft: "8"
-                            },
-                            {
-                                title: "Test task2",
-                                timeEstimation: "8",
-                                timeLeft: "8"
-                            }
-                        ]
-                    },
-                    {
-                        title: "Private",
-                        content: [
-                            {
-                                title: "Test task 3",
-                                timeEstimation: "5",
-                                timeLeft: "4"
-                            }
-                        ]
-                    }
-                ]
-            };
+            localVal = initData;
             localStorage.setItem("my-todo",  JSON.stringify(localVal));
         } else {
             localVal = JSON.parse(localItem);
@@ -129,11 +134,13 @@ function renderUI(obj) {
 
 function addClickHandlers() {
     sections = document.querySelectorAll(".planner_group");
-    addNewGroupBtn = document.querySelectorAll(".js-new-group");
+    addNewGroupBtn = document.querySelector(".js-new-group");
     addNewItemBtn = document.querySelectorAll(".js-new-item");
     startBtn = document.querySelectorAll(".js-start");
     stopBtn = document.querySelectorAll(".js-stop");
     resetBtn = document.querySelectorAll(".js-reset");
+
+    addNewGroupBtn.addEventListener("click", function(e) {addNewGroup(e.target)});
 
     for (var i = 0, n = sections.length; i < n; i++) {
         sections[i].addEventListener("click", function(e) {handleClick(e.target)});
@@ -177,6 +184,10 @@ function addNewItem(elem) {
             var groupTitle = elem.parentNode.previousElementSibling.innerHTML;
             saveNewItem(inputTitle.value, inputTime.value, groupTitle);
             appendNewItem(inputTitle.value, inputTime.value, list);
+
+            // Clear inputs
+            inputTitle.value = "";
+            inputTime.value = "";
         }
     } else {
         textHelp.innerHTML = helpTextNotEmpty;
@@ -220,5 +231,76 @@ function appendNewItem(title, time, parent) {
     liEl.appendChild(controlsDiv);
 
     parent.appendChild(liEl);
-    console.log("win!");
+}
+
+function addNewGroup(elem) {
+    var inputTitle = elem.previousElementSibling,
+        textHelp = elem.parentNode.nextElementSibling;
+
+    // Clear help text
+    textHelp.innerHTML = "";
+    textHelp.className = "text-help";
+
+    if (inputTitle.value != "") {
+        saveNewGroup(inputTitle.value);
+        appendNewGroup(inputTitle.value);
+
+        // Clear input
+        inputTitle.value = "";
+    } else {
+        textHelp.innerHTML = helpTextNoTitle;
+        textHelp.className = "text-help show";
+    }
+}
+
+function saveNewGroup(title) {
+    var newGroup = formGroupObject(title);
+    data.groups.push(newGroup);
+    localStorage.setItem("my-todo",  JSON.stringify(data));
+}
+
+function appendNewGroup(title) {
+    //Section
+    var sectionDiv = document.createElement("section");
+    sectionDiv.className = "planner_group";
+
+    //Group title
+    var h2El = document.createElement("h2");
+    h2El.className = "planner_group-title";
+    h2El.innerHTML = title;
+
+    //Add new fields
+    var addNewDiv = document.createElement("div");
+    addNewDiv.className = "planner_add-new";
+    addNewDiv.innerHTML = addNewDivInner;
+
+    //Helper maessage
+    var pEl = document.createElement("p");
+    pEl.className = "text-help";
+    pEl.innerHTML = "";
+
+    //Divider
+    var dividerEl = document.createElement("hr");
+    dividerEl.className = "planner_divider";
+
+    //Task list
+    var ulEl = document.createElement("ul");
+    ulEl.className = "planner_list";
+
+    sectionDiv.appendChild(h2El);
+    sectionDiv.appendChild(addNewDiv);
+    sectionDiv.appendChild(pEl);
+    sectionDiv.appendChild(dividerEl);
+    sectionDiv.appendChild(ulEl);
+
+    planner.appendChild(sectionDiv);
+
+    addClickHandlers();
+}
+
+function formGroupObject(title) {
+    return {
+        title: title,
+        content: []
+    }
 }
