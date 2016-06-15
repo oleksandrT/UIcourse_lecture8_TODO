@@ -11,7 +11,7 @@ var helpTextNotEmpty = "New item can be created only if all fields are set",
 var controlsDivInner =   '<span>Timer:</span> <button class="planner_item-button planner_item-button--start js-start">Start</button> <button class="planner_item-button planner_item-button--stop js-stop">Stop</button> <button class="planner_item-button planner_item-button--reset js-reset">Reset</button>';
 var addNewDivInner = '<input type="text" placeholder="New Item\'s title" class="planner_input"> <input type="text" placeholder="New Item\'s duration" class="planner_input"> <button class="planner_item-button planner_item-button--add js-new-item">Add</button>';
 
- 
+
 initStorage();
 renderUI(data);
 addClickHandlers();
@@ -220,4 +220,5 @@ function appendNewItem(title, time, parent) {
     liEl.appendChild(controlsDiv);
 
     parent.appendChild(liEl);
+    console.log("win!");
 }
