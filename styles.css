@@ -12,6 +12,7 @@ body {
     padding: 15px;
 }
 
+
 /*
  * Components styles
 */
@@ -63,20 +64,25 @@ body {
     vertical-align: top;
 }
 
+.planner .planner_item-controls {
+    line-height: 1.7em;
+}
+
 .planner .planner_item-button--add { background-color: cadetblue; vertical-align: top; }
 .planner .planner_item-button--start { background-color: mediumseagreen; }
 .planner .planner_item-button--stop { background-color: tomato; }
 .planner .planner_item-button--reset { background-color: white; }
 .planner .planner_item-button--new-group { margin-left: 0; margin-bottom: 10px; }
 
-.text-help {
+.planner .text-help {
     display: none;
     color: red;
 }
 
-.text-help.show {
+.planner .text-help.show {
     display: block;
 }
+
 
 @media (min-width: 768px) {
     .planner .planner_item {
@@ -91,6 +97,7 @@ body {
         margin-left: -4px;
     }
 }
+
 
 @media (min-width: 1024px) {
     .planner .planner_item {

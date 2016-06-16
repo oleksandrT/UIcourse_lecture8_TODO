@@ -22,12 +22,12 @@ var initData = {
                 {
                     title: "Test task",
                     timeEstimation: "8",
-                    timeLeft: "8"
+                    timeLeft: "6"
                 },
                 {
                     title: "Test task2",
                     timeEstimation: "8",
-                    timeLeft: "8"
+                    timeLeft: "4"
                 }
             ]
         }
@@ -128,17 +128,11 @@ function renderUI(obj) {
 
         planner.appendChild(sectionDiv);
     }
-
-
 }
 
 function addClickHandlers() {
     sections = document.querySelectorAll(".planner_group");
     addNewGroupBtn = document.querySelector(".js-new-group");
-    addNewItemBtn = document.querySelectorAll(".js-new-item");
-    startBtn = document.querySelectorAll(".js-start");
-    stopBtn = document.querySelectorAll(".js-stop");
-    resetBtn = document.querySelectorAll(".js-reset");
 
     addNewGroupBtn.addEventListener("click", function(e) {addNewGroup(e.target)});
 
@@ -154,9 +148,9 @@ function handleClick(elem) {
     } else if ( elemClass.indexOf("js-start") >=0 ) {
         startTimer(elem);
     } else if ( elemClass.indexOf("js-stop") >=0 ) {
-        console.log("stop btn");
+        // console.log("stop btn");
     } else if ( elemClass.indexOf("js-reset") >=0 ) {
-        console.log("reset btn");
+        resetTimer(elem);
     }
 }
 
@@ -205,6 +199,7 @@ function saveNewItem(title, time, groupTitle) {
             });
         }
     }
+
     localStorage.setItem("my-todo",  JSON.stringify(data));
 }
 
@@ -305,6 +300,76 @@ function formGroupObject(title) {
     }
 }
 
-function startTimer(btn) {
-    
+function startTimer(elem) {
+    var item = elem.parentNode.parentNode,
+        group = item.parentNode.parentNode,
+        timeLeftEl = item.querySelectorAll(".planner_item-time")[1],
+        timeLeft = timeLeftEl.innerHTML.slice(-1),
+        deadline = new Date(Date.parse(new Date()) + timeLeft * 60 * 60 * 1000);
+
+    var groupTitle = group.querySelector(".planner_group-title").innerHTML,
+        itemTitle = item.querySelector(".planner_item-title").innerHTML;
+
+    initTimer(timeLeftEl, deadline, groupTitle, itemTitle);
+}
+
+function initTimer(el, endtime, groupTitle, itemTitle) {
+    function updateTimer() {
+        var t = getTimeRemaining(endtime);
+        el.innerHTML = "Time left:" + t.hours;
+        saveNewTime(t.hours, groupTitle, itemTitle);
+
+        if (t.total <= 0) {
+            clearInterval(timerInterval);
+        }
+    }
+
+    updateTimer();
+    var timerInterval = setInterval(updateTimer, 60 * 60 * 1000);  // each hour
+
+    // Set handler on stop button
+    var stopBtn = el.nextElementSibling.querySelector(".js-stop");
+    stopBtn.addEventListener("click", function () {
+        clearInterval(timerInterval);
+    })
+}
+
+function getTimeRemaining(endtime) {
+    var t = Date.parse(endtime) - Date.parse(new Date());
+    var hours = Math.floor((t / (1000 * 60 * 60)) % 24);
+    return {
+        'total': t,
+        'hours': hours
+    };
+}
+
+function saveNewTime(newTime, groupTitle, itemTitle) {
+    var localItem = localStorage.getItem("my-todo"),
+        arr = JSON.parse(localItem);
+
+    arr.groups.forEach(function(group, i){
+        if(group.title === groupTitle) {
+            group.content.forEach(function(item, j){
+                if(item.title === itemTitle) {
+                    item.timeLeft = newTime;
+                }
+            });
+        }
+    });
+
+    localStorage.setItem("my-todo",  JSON.stringify(arr));
+}
+
+function resetTimer(elem) {
+    var item = elem.parentNode.parentNode,
+        group = item.parentNode.parentNode,
+        timeEstimationEl = item.querySelectorAll(".planner_item-time")[0],
+        timeLeftEl = item.querySelectorAll(".planner_item-time")[1];
+
+    timeLeftEl.innerHTML = "Time left:" + timeEstimationEl.innerHTML.slice(-1);
+
+    var groupTitle = group.querySelector(".planner_group-title").innerHTML,
+        itemTitle = item.querySelector(".planner_item-title").innerHTML;
+
+    saveNewTime(timeEstimationEl.innerHTML.slice(-1), groupTitle, itemTitle);
 }
