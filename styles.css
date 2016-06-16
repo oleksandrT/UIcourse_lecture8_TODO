@@ -54,9 +54,13 @@ body {
 }
 
 .planner .planner_item-button {
-    padding: 8px 6px;
+    padding: 8px 6px 7px;
     border: 1px solid transparent;
     text-transform: uppercase;
+    cursor: pointer;
+    line-height: 1.45em;
+    font-size: 0.7em;
+    vertical-align: top;
 }
 
 .planner .planner_item-button--add { background-color: cadetblue; vertical-align: top; }

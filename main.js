@@ -152,7 +152,7 @@ function handleClick(elem) {
     if ( elemClass.indexOf("js-new-item") >=0 ) {
         addNewItem(elem);
     } else if ( elemClass.indexOf("js-start") >=0 ) {
-        console.log("start btn");
+        startTimer(elem);
     } else if ( elemClass.indexOf("js-stop") >=0 ) {
         console.log("stop btn");
     } else if ( elemClass.indexOf("js-reset") >=0 ) {
@@ -303,4 +303,8 @@ function formGroupObject(title) {
         title: title,
         content: []
     }
+}
+
+function startTimer(btn) {
+    
 }
